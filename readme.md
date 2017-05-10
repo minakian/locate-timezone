@@ -7,11 +7,11 @@ The second half uses a custom webhook to publish the latitude, longitude, and ti
 
 INTEGRATION (Webhook) INFO
 
-Event Name        timeZone
-Full URL          https://maps.googleapis.com/maps/api/timezone/json
-Request Type      GET
-Device            *Your devices go here*
-Query Params
+* Event Name        timeZone
+* Full URL          https://maps.googleapis.com/maps/api/timezone/json
+* Request Type      GET
+* Device            *Your devices go here*
+* Query Params
   {
     "location": "{{lat}},{{lon}}",
     "timestamp": "{{timeStamp}}",
@@ -19,13 +19,13 @@ Query Params
     "": ""
   }
      
-Include Default Attributes    No
-Enforce SSL                   Yes
-Response Template
+* Include Default Attributes    No
+* Enforce SSL                   Yes
+* Response Template
 
   {{dstOffset}},{{rawOffset}},{{status}},{{timeZoneId}},{{timeZoneName}}
 
-From te above response template, the necessary data is parsed prior to sending it to the device, from which the device may then extrapolate the required data fields directly.
+* From te above response template, the necessary data is parsed prior to sending it to the device, from which the device may then extrapolate the required data fields directly.
 
 # Code for gathering data
 
