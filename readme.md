@@ -29,14 +29,18 @@ INTEGRATION (Webhook) INFO
 
 # Code for gathering data
 
+In setup()
 ```
 locator.withLocateOnce(); 
 locator.withSubscribe(locationCallback);
 Particle.subscribe("hook-response/timeZone", myHandler, MY_DEVICES);
 ```
+in loop()
+```
+locator.loop();`
+```
 
-`locator.loop();`
-
+callback for google map integration
 ```
 void locationCallback(float lat, float lon, float accuracy){
   String data = String::format("{ \"lat\": %f, \"lon\": %f, \"timeStamp\": %i }",lat, lon, Time.now());
@@ -44,6 +48,7 @@ void locationCallback(float lat, float lon, float accuracy){
 }
 ```
 
+response handler from timeZone webhook response
 ```
 void myHandler(const char *event, const char *data){
   char *mutableCopy = strdup(data);
