@@ -29,20 +29,20 @@ INTEGRATION (Webhook) INFO
 
 # Code for gathering data
 
-##In setup()
-```
+## In setup()
+```c++
 zone.begin();
 zone.getLocation();
 ```
 `zone.begin()` sets up the location callback and subscription to the 'timeZone' event.
 `zone.getTimezone()` calls the api to retrieve the device location and timezone.
 
-##in loop()
+## in loop()
 ```
 
 ```
 
-##callback for google map integration
+## callback for google map integration
 ```c++
 void GoogleMapsTimeZone::locationCallback(float lat, float lon, float accuracy){
   String data = String::format("{ \"lat\": %f, \"lon\": %f, \"timeStamp\": %i }",lat, lon, Time.now());
@@ -51,8 +51,8 @@ void GoogleMapsTimeZone::locationCallback(float lat, float lon, float accuracy){
 }
 ```
 
-##response handler from timeZone webhook response
-```
+## response handler from timeZone webhook response
+```c++
 void GoogleMapsTimeZone::subscriptionHandler(const char *event, const char *data) {
 	// event: hook-response/timeZone/<deviceid>/0
   char *mutableCopy = strdup(data);
