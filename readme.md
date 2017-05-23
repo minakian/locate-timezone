@@ -38,7 +38,7 @@ zone.getLocation();
 `zone.getTimezone()` calls the api to retrieve the device location and timezone.
 
 ## in loop()
-```
+```c++
 
 ```
 
@@ -60,7 +60,6 @@ void GoogleMapsTimeZone::subscriptionHandler(const char *event, const char *data
 
   part = strtok_r(mutableCopy, ",", &end);
   if (part) {
-  //	    Serial.println(part);
     dstOffset = atoi(part);
     part = strtok_r(NULL, ",", &end);
     if (part) {
@@ -68,8 +67,6 @@ void GoogleMapsTimeZone::subscriptionHandler(const char *event, const char *data
       part = strtok_r(NULL, ",", &end);
       if (part) {
         status = part;
-  //
-  //				//(*callback)(lat, lon, accuracy);
       }
     }
   }
