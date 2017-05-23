@@ -11,7 +11,10 @@ public:
   void begin();
   static void locationCallback(float lat, float lon, float accuracy);
   void loop();
-
+  void getTimezone();
+  void setDeviceTimezone();
+  bool getReady();
+  bool ready = false;
   GoogleMapsDeviceLocator * locator;
 
 protected:
@@ -19,6 +22,10 @@ protected:
   int dstOffset, rawOffset;
   void timeZoneSubscribe();
   void subscriptionHandler(const char *event, const char *data);
+  float timezone;
+//  float dstOffset;
+  bool dstActive =  false;
+//  bool ready = false;
 };
 
 #endif

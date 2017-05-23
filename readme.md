@@ -18,46 +18,49 @@ INTEGRATION (Webhook) INFO
     "key": "XXXYourAPIKeyHere",
     "": ""
   }
-     
+
 * Include Default Attributes    No
 * Enforce SSL                   Yes
 * Response Template
 
   {{dstOffset}},{{rawOffset}},{{status}},{{timeZoneId}},{{timeZoneName}}
 
-* From te above response template, the necessary data is parsed prior to sending it to the device, from which the device may then extrapolate the required data fields directly.
+* From the above response template, the necessary data is parsed prior to sending it to the device, from which the device may then extrapolate the required data fields directly.
 
 # Code for gathering data
 
-In setup()
+##In setup()
 ```
-locator.withLocateOnce(); 
-locator.withSubscribe(locationCallback);
-Particle.subscribe("hook-response/timeZone", myHandler, MY_DEVICES);
+zone.begin();
+zone.getLocation();
 ```
-in loop()
-```
-locator.loop();`
+`zone.begin()` sets up the location callback and subscription to the 'timeZone' event.
+`zone.getTimezone()` calls the api to retrieve the device location and timezone.
+
+##in loop()
 ```
 
-callback for google map integration
 ```
-void locationCallback(float lat, float lon, float accuracy){
+
+##callback for google map integration
+```c++
+void GoogleMapsTimeZone::locationCallback(float lat, float lon, float accuracy){
   String data = String::format("{ \"lat\": %f, \"lon\": %f, \"timeStamp\": %i }",lat, lon, Time.now());
-  Particle.publish("timeZone", data, PRIVATE);
+  Serial.println(data);
+  Particle.publish("timeZone/" + String(System.deviceID()), data, PRIVATE);
 }
 ```
 
-response handler from timeZone webhook response
+##response handler from timeZone webhook response
 ```
-void myHandler(const char *event, const char *data){
+void GoogleMapsTimeZone::subscriptionHandler(const char *event, const char *data) {
+	// event: hook-response/timeZone/<deviceid>/0
   char *mutableCopy = strdup(data);
   char *part, *end;
-  int dstOffset, rawOffset;
-  String  status;
 
   part = strtok_r(mutableCopy, ",", &end);
   if (part) {
+  //	    Serial.println(part);
     dstOffset = atoi(part);
     part = strtok_r(NULL, ",", &end);
     if (part) {
@@ -65,11 +68,16 @@ void myHandler(const char *event, const char *data){
       part = strtok_r(NULL, ",", &end);
       if (part) {
         status = part;
+  //
+  //				//(*callback)(lat, lon, accuracy);
       }
     }
   }
 
   free(mutableCopy);
+  timezone = rawOffset / 3600.0;
+  Time.zone(timeZone);
+  ready = true;
 }
 ```
-The code above shows how to extract the first 3 pieces of data, though this data should be saved somewhere.
+The code above will retrieve the location and timezone from google APIs and then set the timezone.

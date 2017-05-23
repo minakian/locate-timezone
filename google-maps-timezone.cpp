@@ -55,9 +55,23 @@ void GoogleMapsTimeZone::subscriptionHandler(const char *event, const char *data
   }
 
   free(mutableCopy);
-  String dat = String::format("{ \"dstOffset\": %i, \"rawOffset\": %i, \"status\": " + status + " }",dstOffset, rawOffset);
+  timezone = rawOffset / 3600.0;
+  String dat = String::format("{ \"dstOffset\": %i, \"rawOffset\": %i, \"status\": " + status + " }", dstOffset, rawOffset);
   Serial.println(dat);
-  Serial.println(dstOffset);
-  Serial.println(rawOffset);
-  Serial.println(status);
+  Serial.println(timezone);
+  ready = true;
+
+}
+
+void GoogleMapsTimeZone::getTimezone(){
+  locator -> publishLocation();
+}
+
+void GoogleMapsTimeZone::setDeviceTimezone(){
+  Time.zone(timezone);
+  Serial.println("Timezone SET " + String(timezone, DEC));
+}
+
+bool GoogleMapsTimeZone::getReady(){
+  return ready;
 }
